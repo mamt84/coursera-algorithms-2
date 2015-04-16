@@ -26,36 +26,81 @@ public class OptimalBinarySearchTree {
             }
 
 
-            Float[][] optimalCost = new Float[n][n];
+            Float[][] a = new Float[n][n];
             for (int i = 0; i < n; i++) {
-                optimalCost[i][i] = weights.get(i);
+                a[i][i] = weights.get(i);
             }
 
             float min;
             float sum = 0;
-            for (int s = 0; s < n-1; s++) {
-                for (int i = 0; i < n; i++) {
-                    min = 100000f;
-                    sum = 0;
-                    for (int r = i; r <= i+s; r++) {
-                        if (r-1 >= i && r+1 < i+s)
-                            sum += weights.get(r) + optimalCost[i][r-1] + optimalCost[r+1][i+s];
-                        else if (r-1 < i && r+1 < i+s)
-                            sum += weights.get(r) + optimalCost[r+1][i+s];
-                        else if (r+1 >= i+s && r-1 >= i)
-                            sum += weights.get(r) + optimalCost[i][r-1];
-                        else
-                            sum += weights.get(r);
-                        if (sum < min)
-                            min = sum;
-                    }
-                    optimalCost[i][i+s] = min;
-                }
-            }
+            float temp;
+            int j;
+           for ( int x = 1; x <= n; x++ )
+           {
+              for ( int i = 0; i < n-x+1; i++ )
+              {
+                 j = i+x-1;
 
-            System.out.println(optimalCost[1][n-1]);
+                 if (i != j){
+                    min = 100000f;
+                    for ( int r = i; r <= j; r++ )
+                    {
+                       sum = 0;
+                       for ( int k = i; k <= j; k++ )
+                       {
+                          sum += weights.get(k);
+                       }
+
+                       if (r-1 >= i && r+1 <= j)
+                          temp = sum + a[i][r-1] + a[r+1][j];
+                       else if (r-1 < i && r+1 <= j)
+                          temp = sum + a[r+1][j];
+                       else if (r-1 >= i && r+1 > j)
+                          temp = sum + a[i][r-1];
+                       else
+                          temp = sum;
+
+                       if (temp < min)
+                          min = temp;
+                    }
+                    a[i][j] = min;
+                 }
+                 //printMatrix( a );
+              }
+           }
+
+           for ( int i = 0; i < n; i++ )
+           {
+              for ( int k = 0; k < n; k++ )
+              {
+                 System.out.print(a[i][k]);
+                 System.out.print(" ");
+              }
+              System.out.println();
+           }
+           System.out.println(a[0][n-1]);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+   public static void printMatrix(Float[][] a){
+      int n = a.length;
+      int n1;
+      System.out.println();
+      System.out.println();
+      for ( int i = 0; i < n; i++ )
+      {
+         n1 = a[i].length;
+         for ( int k = 0; k < n1; k++ )
+         {
+            System.out.print(a[i][k]);
+            System.out.print(" ");
+         }
+         System.out.println();
+      }
+
+      System.out.println();
+      System.out.println();
+   }
 }
