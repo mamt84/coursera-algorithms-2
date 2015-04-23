@@ -53,7 +53,7 @@ public class AllPairsShortestPathsMain
 
          long min = Long.MAX_VALUE;
          AllPairsShortestPaths allPairsShortestPaths = new AllPairsShortestPathsNaive();
-         //allPairsShortestPaths.activateLogging();
+         allPairsShortestPaths.activateLogging();
          Map<Integer, Map<Integer, Long>> solution = allPairsShortestPaths.computeAllShortestPaths( graph );
          if (solution != null){
             for ( Integer vertexId : solution.keySet() )

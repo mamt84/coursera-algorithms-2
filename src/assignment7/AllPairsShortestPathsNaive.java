@@ -10,7 +10,8 @@ import java.util.Map;
  */
 public class AllPairsShortestPathsNaive implements AllPairsShortestPaths
 {
-   SingleSourceShortestPaths singleSourceShortestPaths = new BellmanFord();
+   //SingleSourceShortestPaths singleSourceShortestPaths = new BellmanFord();
+    SingleSourceShortestPaths singleSourceShortestPaths = new BellmanFordVariant();
 
    boolean logging = false;
 
