@@ -11,47 +11,37 @@ import java.util.*;
  * Created by mmorcate on 4/23/2015.
  */
 public class BellmanFordVariant implements SingleSourceShortestPaths {
-    private Map<Integer, Collection<Edge>> forwardEdges;
-
-    private Map<Integer, Collection<Edge>> backwardEdges;
 
     public Map<Integer, Collection<Edge>> createForwardEdges(DirectedGraph graph, List<Vertice> vertices) {
-
-        if (forwardEdges != null) {
-            return forwardEdges;
-        }
 
         Map<Integer, Collection<Edge>> result = Maps.newHashMap();
         for (int i = 0; i < vertices.size(); i++) {
             if (!result.containsKey(vertices.get(i).id))
                 result.put(vertices.get(i).id, new ArrayList<Edge>());
             for (int j = 0; j < vertices.size(); j++) {
-                if (vertices.get(i).key < vertices.get(j).key && graph.existsEdge(vertices.get(i), vertices.get(j))) {
-                    result.get(vertices.get(i).id).add(graph.getEdge(vertices.get(i), vertices.get(j)));
+                if (vertices.get(j).key < vertices.get(i).key && graph.existsEdge(vertices.get(j), vertices.get(i))) {
+                    result.get(vertices.get(i).id).add(graph.getEdge(vertices.get(j), vertices.get(i)));
                 }
             }
         }
 
-        return forwardEdges = result;
+        return result;
     }
 
     public Map<Integer, Collection<Edge>> createBackwardEdges(DirectedGraph graph, List<Vertice> vertices) {
 
-        if (backwardEdges != null) {
-            return backwardEdges;
-        }
         Map<Integer, Collection<Edge>> result = Maps.newHashMap();
         for (int i = 0; i < vertices.size(); i++) {
             if (!result.containsKey(vertices.get(i).id))
                 result.put(vertices.get(i).id, new ArrayList<Edge>());
             for (int j = 0; j < vertices.size(); j++) {
-                if (vertices.get(i).key > vertices.get(j).key && graph.existsEdge(vertices.get(i), vertices.get(j))) {
-                    result.get(vertices.get(i).id).add(graph.getEdge(vertices.get(i), vertices.get(j)));
+                if (vertices.get(j).key > vertices.get(i).key && graph.existsEdge(vertices.get(j), vertices.get(i))) {
+                    result.get(vertices.get(i).id).add(graph.getEdge(vertices.get(j), vertices.get(i)));
                 }
             }
         }
 
-        return backwardEdges = result;
+        return result;
     }
 
     @Override
@@ -59,7 +49,6 @@ public class BellmanFordVariant implements SingleSourceShortestPaths {
                                                    Vertice startingVertex) {
         List<Vertice> vertices = Lists.newArrayList(graph.vertices.values());
 
-        Vertice temp;
         for (int i = 0; i < vertices.size(); i++) {
             if (vertices.get(i).id == startingVertex.id) {
                 vertices.get(i).key = 1;
@@ -75,9 +64,10 @@ public class BellmanFordVariant implements SingleSourceShortestPaths {
         for (Vertice vertex : vertices) {
             solution.put(vertex.id, (long) Integer.MAX_VALUE);
         }
+       solution.put(startingVertex.id, 0L);
 
-        createForwardEdges(graph, vertices);
-        createBackwardEdges(graph, vertices);
+       Map<Integer, Collection<Edge>> forwardEdges = createForwardEdges(graph, vertices);
+       Map<Integer, Collection<Edge>> backwardEdges = createBackwardEdges(graph, vertices);
 
         /*for (int i = 0; i < vertices.size(); i++) {
             System.out.println(vertices.get(i));
@@ -87,8 +77,6 @@ public class BellmanFordVariant implements SingleSourceShortestPaths {
             }
         }*/
 
-
-        solution.put(startingVertex.id, 0L);
         int n = graph.vertices.size();
         long min;
         boolean oddIteration = true;
